@@ -1,0 +1,144 @@
+// MOBILE NAVIGATION
+
+const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("nav-links");
+
+menuToggle.addEventListener("click", () => {
+
+    navLinks.classList.toggle("show");
+
+    const isOpen = navLinks.classList.contains("show");
+
+    menuToggle.setAttribute("aria-expanded", isOpen);
+
+    menuToggle.innerHTML = isOpen
+        ? '<i class="fas fa-times"></i>'
+        : '<i class="fas fa-bars"></i>';
+});
+
+// CLOSE MOBILE MENU AFTER CLICKING A LINK
+
+document.querySelectorAll(".nav-links a").forEach(link => {
+
+    link.addEventListener("click", () => {
+
+        navLinks.classList.remove("show");
+
+        menuToggle.setAttribute("aria-expanded", "false");
+
+        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+
+    });
+
+});
+
+// STICKY HEADER SHADOW
+
+const header = document.getElementById("header");
+
+window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 50) {
+        header.classList.add("scrolled");
+    } else {
+        header.classList.remove("scrolled");
+    }
+
+});
+
+// SCROLL REVEAL ANIMATION
+
+const revealElements = document.querySelectorAll(".reveal");
+
+const observer = new IntersectionObserver((entries) => {
+
+    entries.forEach(entry => {
+
+        if (entry.isIntersecting) {
+
+            entry.target.classList.add("active");
+
+            observer.unobserve(entry.target);
+
+        }
+
+    });
+
+}, {
+    threshold: 0.12
+});
+
+revealElements.forEach(element => {
+
+    observer.observe(element);
+
+});
+
+// DYNAMIC COPYRIGHT YEAR
+
+document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+// CONTACT FORM VALIDATION
+
+const contactForm = document.getElementById("contact-form");
+
+const formStatus = document.getElementById("form-status");
+
+contactForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+
+    const email = document.getElementById("email").value.trim();
+
+    const subject = document.getElementById("subject").value.trim();
+
+    const message = document.getElementById("message").value.trim();
+
+    // CHECK EMPTY FIELDS
+
+    if (!name || !email || !subject || !message) {
+
+        formStatus.textContent = "Please fill in all fields.";
+
+        return;
+
+    }
+
+    // CHECK EMAIL FORMAT
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+
+        formStatus.textContent =
+            "Please enter a valid email address.";
+
+        return;
+
+    }
+
+    // OPEN EMAIL APPLICATION
+
+    const recipient = "chaitanyanavudu400@gmail.com";
+
+    const emailSubject = encodeURIComponent(subject);
+
+    const emailBody = encodeURIComponent(
+        "Name: " + name +
+        "\nEmail: " + email +
+        "\n\nMessage:\n" + message
+    );
+
+    const mailtoLink =
+        `mailto:${recipient}?subject=${emailSubject}&body=${emailBody}`;
+
+    formStatus.textContent =
+        "Opening your email application...";
+
+    window.location.href = mailtoLink;
+
+});
